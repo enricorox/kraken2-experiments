@@ -71,11 +71,11 @@ def main():
     match, selected_math = compare(res, taxa, truth)
 
     print(f'Number of queries: {total_queries}')
-    print(f'Number of matches: {match} ({match / total_queries * 100}%)')
+    print(f'Number of matches: {match} ({match / total_queries * 100:.2f}%)')
     print()
     print(f'Input taxa: {total_taxa}')
     print(f'Selected taxa: {total_taxa_in_queries}')
-    print(f'Selected taxa matches: {selected_math} ({selected_math / total_taxa_in_queries * 100}%)')
+    print(f'Selected taxa matches: {selected_math} ({selected_math / total_taxa_in_queries * 100:.2f}%)')
 
 
 if __name__ == '__main__':
