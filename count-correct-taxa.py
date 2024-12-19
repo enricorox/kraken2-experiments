@@ -70,20 +70,21 @@ def main():
     res = read_results_file(args.res)
     taxa = read_taxa_file(args.taxa)
 
-    total_queries = len(res)
-    total_taxa = len(taxa)
+    total_found_taxa = len(res)
+    total_selected_taxa = len(taxa)
+    total_true_taxa = len(truth)
     filtered_res = filter_results(res, taxa)
-    total_filtered_queries = len(filtered_res)
+    total_filtered_taxa_found = len(filtered_res)
     matches = count_matches(res, truth)
     filtered_matches = count_matches(filtered_res, truth)
 
-    print(f'Number of queries: {total_queries}, unique taxa: {len(set(res.values()))}')
-    print(set(res.values()))
-    print(f'Number of matches: {matches} ({matches / total_queries * 100:.2f}%)')
+    print(f"Number of true taxa: {total_true_taxa}, unique true taxa: {total_true_taxa}")
+    print(f'Number of found taxa: {total_found_taxa}, unique found taxa: {len(set(res.values()))}')
+    print(f'Number of matches: {matches} ({matches / total_found_taxa * 100:.2f}%)')
     print()
-    print(f'Input taxa: {total_taxa}')
-    print(f'Filtered queries: {total_filtered_queries}, unique taxa: {len(set(filtered_res.values()))}')
-    print(f'Filtered matches: {filtered_matches} ({filtered_matches / total_filtered_queries * 100:.2f}%)')
+    print(f'Input taxa: {total_selected_taxa}')
+    print(f'Filtered found taxa: {total_filtered_taxa_found}, unique filtered found taxa: {len(set(filtered_res.values()))}')
+    print(f'Filtered matches: {filtered_matches} ({filtered_matches / total_filtered_taxa_found * 100:.2f}%)')
 
 
 if __name__ == '__main__':
