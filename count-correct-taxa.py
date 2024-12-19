@@ -78,11 +78,12 @@ def main():
     matches = count_matches(res, truth)
     filtered_matches = count_matches(filtered_res, truth)
 
-    print(f"Number of true reads: {total_true_reads} true taxa: {len(set(truth.values()))}")
+    print(f"Number of true reads: {total_true_reads}, true taxa: {len(set(truth.values()))}")
     print(f'Number of found reads: {total_found_reads}, found taxa: {len(set(res.values()))}')
     print(f'Number of matches: {matches} ({matches / total_found_reads * 100:.2f}%)')
     print()
     print(f'Input taxa: {total_selected_taxa}')
+    print(f'Filtered true reads:')
     print(f'Filtered found reads: {total_filtered_found_reads}, filtered found taxa: {len(set(filtered_res.values()))}')
     print(f'Filtered matches: {filtered_matches} ({filtered_matches / total_filtered_found_reads * 100:.2f}%)')
 
