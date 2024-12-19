@@ -114,12 +114,12 @@ void ScoreCalls(const string &calls_file, const string &rank, const unordered_ma
         no++;  // ran off tree without finding rank!
       }
       else {
-        if (isAncestor(parent_map, correct, taxon))
+        if (isAncestor(parent_map, correct, taxon)) // correct
           tp++;
         else {
-          if (isAncestor(parent_map, taxon, correct))
+          if (isAncestor(parent_map, taxon, correct)) // correct above rank
             ok++;
-          else {
+          else { // completely wrong branch
             fp++;
           }
         }
