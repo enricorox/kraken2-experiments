@@ -16,7 +16,7 @@ def read_ground_truth_file(filename):
     with open(filename, 'r') as truth_file:
         for line in truth_file:
             values = line.split('\t')
-            truth[values[0]] = values[1]
+            truth[values[0]] = int(values[1])
     return truth
 
 
@@ -35,7 +35,7 @@ def read_taxa_file(filename):
     taxa = set()
     with open(filename, 'r') as taxa_file:
         for line in taxa_file:
-            taxa.add(line)
+            taxa.add(int(line))
     return taxa
 
 
