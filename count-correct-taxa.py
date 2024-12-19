@@ -39,15 +39,20 @@ def read_taxa_file(filename):
     return taxa
 
 
-def compare(res, taxa, truth):
+def count_matches(res, truth):
     match = 0
-    selected_match = 0
     for key, value in res.items():
         if value == truth.get(key):
             match += 1
-            if value in taxa:
-                selected_match += 1
-    return match, selected_match
+    return match
+
+
+def filter_results(res, taxa):
+    new_res = {}
+    for key, value in res.items():
+        if value in taxa:
+            new_res[key] = value
+    return new_res
 
 
 def main():
@@ -67,15 +72,17 @@ def main():
 
     total_queries = len(res)
     total_taxa = len(taxa)
-    total_taxa_in_queries = len(taxa & set(res.values()))
-    match, selected_math = compare(res, taxa, truth)
+    filtered_res = filter_results(res, taxa)
+    total_filtered_queries = len(filtered_res)
+    matches = count_matches(res, truth)
+    filtered_matches = count_matches(filtered_res, truth)
 
     print(f'Number of queries: {total_queries}')
-    print(f'Number of matches: {match} ({match / total_queries * 100:.2f}%)')
+    print(f'Number of matches: {matches} ({matches / total_queries * 100:.2f}%)')
     print()
     print(f'Input taxa: {total_taxa}')
-    print(f'Selected taxa: {total_taxa_in_queries}')
-    print(f'Selected taxa matches: {selected_math} ({selected_math / total_taxa_in_queries * 100:.2f}%)')
+    print(f'Filtered queries: {total_filtered_queries}')
+    print(f'Filtered matches: {filtered_matches} ({filtered_matches / total_filtered_queries * 100:.2f}%)')
 
 
 if __name__ == '__main__':
