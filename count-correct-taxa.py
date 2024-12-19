@@ -78,6 +78,7 @@ def main():
     filtered_matches = count_matches(filtered_res, truth)
 
     print(f'Number of queries: {total_queries}, unique taxa: {len(set(res.values()))}')
+    print(set(res.values()))
     print(f'Number of matches: {matches} ({matches / total_queries * 100:.2f}%)')
     print()
     print(f'Input taxa: {total_taxa}')
