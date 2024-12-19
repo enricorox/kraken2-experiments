@@ -78,7 +78,7 @@ def main():
     matches = count_matches(res, truth)
     filtered_matches = count_matches(filtered_res, truth)
 
-    print(f"Number of true taxa: {total_true_taxa}, unique true taxa: {total_true_taxa}")
+    print(f"Number of true taxa: {total_true_taxa}, unique true taxa: {len(set(truth.values()))}")
     print(f'Number of found taxa: {total_found_taxa}, unique found taxa: {len(set(res.values()))}')
     print(f'Number of matches: {matches} ({matches / total_found_taxa * 100:.2f}%)')
     print()
