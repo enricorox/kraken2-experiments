@@ -64,12 +64,12 @@ void ReadTruth(unordered_map<string, int> &truth_map, const string &truth_file) 
   }
 }
 
-// is a an ancestor of b?
-bool isAncestor(const unordered_map<int, int> &parent_map, int a, int b) {
-  while (b > 0) {
-    if (a == b)
+// is a_up an ancestor of b_down?
+bool isAncestor(const unordered_map<int, int> &parent_map, int a_up, int b_down) {
+  while (b_down > 0) {
+    if (a_up == b_down)
       return true;
-    b = parent_map.at(b);
+    b_down = parent_map.at(b_down);
   }
   return false;
 }
@@ -86,6 +86,7 @@ void ScoreCalls(const string &calls_file, const string &rank, const unordered_ma
   int fn = 0;
   int ok = 0;  // correct but above rank
   int no = 0;  // no defined true value at rank
+  set<int> tp_set;
 
   string code, name;
   int taxon;
@@ -99,23 +100,25 @@ void ScoreCalls(const string &calls_file, const string &rank, const unordered_ma
       truth_map.erase(name);
       fn++;
     }
-    else {
-      int correct = truth_map.at(name);
+    else { // classified in some way
+      int correct = truth_map.at(name); // correct taxa for the read 'name'
       truth_map.erase(name);
       if (rank_map.count(correct) == 0)  // handle cases where correct taxon isn't there
         correct = 0;
-      // elevate correct taxon to specified rank
+      // elevate correct taxon to user specified rank
       while (correct > 0) {
         if (rank_map.at(correct) == rank)
           break;
         correct = parent_map.at(correct);
       }
-      if (! correct) {
+      if (! correct) { // root reached
         no++;  // ran off tree without finding rank!
       }
-      else {
-        if (isAncestor(parent_map, correct, taxon)) // correct
-          tp++;
+      else { // internal node or leaf
+        if (isAncestor(parent_map, correct, taxon)) { // correct
+            tp++;
+            tp_set.insert(taxon);
+        }
         else {
           if (isAncestor(parent_map, taxon, correct)) // correct above rank
             ok++;
@@ -131,6 +134,8 @@ void ScoreCalls(const string &calls_file, const string &rank, const unordered_ma
   double prec = (tp * 1.0) / (tp + fp);
   double f1 = sens * prec == 0 ? 0.0 : 2 * sens * prec / (sens + prec);
   printf("%d\t%d\t%d\t%d\t%d\t%d\t%.4f\t%.4f\t%.4f\n", tp, fp, fn, ok, no, (tp+fp+fn+ok+no), sens, prec, f1);
+
+  printf("%zu\n", tp_set.size());
 }
 
 int main(int argc, char **argv) {
