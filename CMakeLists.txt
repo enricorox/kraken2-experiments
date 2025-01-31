@@ -3,5 +3,5 @@ project(kraken2_experiments)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(kraken2_experiments
+add_executable(evaluate_calls
         evaluate_calls.cc)
