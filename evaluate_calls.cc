@@ -64,8 +64,15 @@ void ReadTruth(unordered_map<string, int> &truth_map, const string &truth_file) 
   }
 }
 
+int not_in_tree = 0;
+
 // is a_up an ancestor of b_down?
 bool isAncestor(const unordered_map<int, int> &parent_map, int a_up, int b_down) {
+  if(parent_map.find(b_down) == parent_map.end()) { // handle if not in tree
+      not_in_tree++;
+      return false;
+  }
+
   while (b_down > 0) {
     if (a_up == b_down)
       return true;
@@ -91,27 +98,31 @@ void ScoreCalls(const string &calls_file, const string &rank, const unordered_ma
   string code, name;
   int taxon;
   string line;
+
   while (getline(file, line)) {
     istringstream iss(line);
     iss >> name >> taxon;
+
     if (truth_map.count(name) == 0)  // skip calls for things not in truth set
       continue;
+
     if (taxon == 0) {  // unclassified, make FN
       truth_map.erase(name);
       fn++;
-    }
-    else { // classified in some way
+    }else { // classified in some way
       int correct = truth_map.at(name); // correct taxa for the read 'name'
       truth_map.erase(name);
       if (rank_map.count(correct) == 0)  // handle cases where correct taxon isn't there
         correct = 0;
+
       // elevate correct taxon to user specified rank
       while (correct > 0) {
         if (rank_map.at(correct) == rank)
           break;
         correct = parent_map.at(correct);
       }
-      if (! correct) { // root reached
+
+      if (correct == 0) { // root reached
         no++;  // ran off tree without finding rank!
       }
       else { // internal node or leaf
@@ -133,9 +144,8 @@ void ScoreCalls(const string &calls_file, const string &rank, const unordered_ma
   double sens = (tp * 1.0) / (tp + fn + fp + ok);  // includes FP+OK because we need full set of eval'd frags in denominator
   double prec = (tp * 1.0) / (tp + fp);
   double f1 = sens * prec == 0 ? 0.0 : 2 * sens * prec / (sens + prec);
-  printf("%d\t%d\t%d\t%d\t%d\t%d\t%.4f\t%.4f\t%.4f\n", tp, fp, fn, ok, no, (tp+fp+fn+ok+no), sens, prec, f1);
-
-  printf("%zu\n", tp_set.size());
+  printf("TruePositive\tFalsePositive\tFalseNegative\tCorrectAboveRank\tNoDefinedTrueValueAtRank\tTotalCount\tSensitivity\tPrecision\tF1\tDistinctTPAtRank\tNotInTree\n");
+  printf("%d\t%d\t%d\t%d\t%d\t%d\t%.6f\t%.6f\t%.6f\t%zu\t%d\n", tp, fp, fn, ok, no, (tp+fp+fn+ok+no), sens, prec, f1, tp_set.size(), not_in_tree);
 }
 
 int main(int argc, char **argv) {
