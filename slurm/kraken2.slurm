@@ -18,7 +18,7 @@ set -e
 root="/nfsd/bcb/bcbg/rossigno/metagenomics"
 ds_dir="/nfsd/bcb/bcbg/cavattoni/Algobio2023"
 
-PATH="$root/../tools:$PATH"
+PATH="/nfsd/bcb/bcbg/rossigno/tools:$PATH"
 
 db="Standard20240605" # change database here
 nodes="/nfsd/bcb/bcbg/rossigno/metagenomics/reads/nodes.dmp"
