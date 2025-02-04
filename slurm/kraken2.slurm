@@ -59,9 +59,9 @@ echo "Running Kraken2 with $db on marine dataset"
 srun kraken2 --db $root/databases/$db --threads 16 $M > $results/MARINE_$db.out
 
 # refining results
-cut -f 2-3 $results/REAL_$db.out > $results/REAL_$db.res
-cut -f 2-3 $results/SMLTD_$db.out > $results/SMLTD_$db.res
-cut -f 2-3 $results/MARINE_$db.out > $results/MARINE_$db.res
+srun cut -f 2-3 $results/REAL_$db.out > $results/REAL_$db.res
+srun cut -f 2-3 $results/SMLTD_$db.out > $results/SMLTD_$db.res
+srun cut -f 2-3 $results/MARINE_$db.out > $results/MARINE_$db.res
 
 ### EVALUATION ###
 echo "Evaluation: Genus of $db"
