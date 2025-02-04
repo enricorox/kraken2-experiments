@@ -89,7 +89,7 @@ srun evaluate_calls $nodes species $Sground $Sground
 srun evaluate_calls $nodes species $Mground $Mground
 
 echo "Number of genus per database ($db)"
-srun grep -c -P "\tG\t" $db/inspect.txt
+srun grep -c -P "\tG\t" $root/databases/$db/inspect.txt
 
 echo "Number of species per database ($db)"
 srun grep -c -P "\tS\t" $root/databases/$db/inspect.txt
