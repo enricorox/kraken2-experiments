@@ -19,4 +19,4 @@ srun cmake .
 
 srun make
 
-ln -s evaluate_calls "/nfsd/bcb/bcbg/rossigno/tools"
+ln -s "$(realpath evaluate_calls)" "/nfsd/bcb/bcbg/rossigno/tools/evaluate_calls"
