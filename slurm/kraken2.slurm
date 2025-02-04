@@ -88,10 +88,10 @@ srun evaluate_calls $nodes species $Rground $Rground
 srun evaluate_calls $nodes species $Sground $Sground
 srun evaluate_calls $nodes species $Mground $Mground
 
-echo "Number of genus per database"
+echo "Number of genus per database ($db)"
 srun grep -c -P "\tG\t" $db/inspect.txt
 
-echo "Number of species per database"
+echo "Number of species per database ($db)"
 srun grep -c -P "\tS\t" $root/databases/$db/inspect.txt
 
 echo "### JOB TERMINATED ###"
