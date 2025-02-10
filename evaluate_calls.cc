@@ -184,7 +184,7 @@ void ScoreCalls(const string &calls_file, const string &rank, const unordered_ma
             // elevate correct taxon to user specified rank
             while (correct > 0) {
                 if (rank_map.at(correct) == rank)
-                break;
+                    break;
                 correct = parent_map.at(correct);
             }
 
