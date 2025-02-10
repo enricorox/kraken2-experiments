@@ -4,4 +4,4 @@ project(kraken2_experiments)
 set(CMAKE_CXX_STANDARD 14)
 
 add_executable(evaluate_calls
-        evaluate_calls.cc)
+        evaluate_calls_marghe.cc)
