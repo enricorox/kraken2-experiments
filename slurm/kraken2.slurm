@@ -11,8 +11,6 @@
 #SBATCH --partition allgroups
 #SBATCH --mem 200G
 
-echo "### JOB STARTED ###"
-
 set -e
 
 root="/nfsd/bcb/bcbg/rossigno/metagenomics"
@@ -46,52 +44,62 @@ mkdir -p $results && cd $results
 
 cd $results
 
-#REAL DATASET
-echo "Running Kraken2 with $db on real dataset"
-srun kraken2 --db $root/databases/$db --threads 16 --paired $R1 $R2 > $results/REAL_$db.out
+run_kraken(){
+  #REAL DATASET
+  echo "Running Kraken2 with $db on real dataset"
+  srun kraken2 --db $root/databases/$db --threads 16 --paired $R1 $R2 > $results/REAL_$db.out
 
-#SIMULATED DATASET
-echo "Running Kraken2 with $db on simulated dataset"
-srun kraken2 --db $root/databases/$db --threads 16 --paired $S1 $S2 > $results/SMLTD_$db.out
+  #SIMULATED DATASET
+  echo "Running Kraken2 with $db on simulated dataset"
+  srun kraken2 --db $root/databases/$db --threads 16 --paired $S1 $S2 > $results/SMLTD_$db.out
 
-#MARINE DATASET
-echo "Running Kraken2 with $db on marine dataset"
-srun kraken2 --db $root/databases/$db --threads 16 $M > $results/MARINE_$db.out
+  #MARINE DATASET
+  echo "Running Kraken2 with $db on marine dataset"
+  srun kraken2 --db $root/databases/$db --threads 16 $M > $results/MARINE_$db.out
 
-# refining results
-srun cut -f 2-3 $results/REAL_$db.out > $results/REAL_$db.res
-srun cut -f 2-3 $results/SMLTD_$db.out > $results/SMLTD_$db.res
-srun cut -f 2-3 $results/MARINE_$db.out > $results/MARINE_$db.res
+  # refining results
+  srun cut -f 2-3 $results/REAL_$db.out > $results/REAL_$db.res
+  srun cut -f 2-3 $results/SMLTD_$db.out > $results/SMLTD_$db.res
+  srun cut -f 2-3 $results/MARINE_$db.out > $results/MARINE_$db.res
+}
 
-### EVALUATION ###
-echo "Evaluation: Genus of $db"
+evaluate(){
+  ### EVALUATION ###
+  echo "Evaluation: Genus of $db"
 
-srun evaluate_calls $nodes genus $Rground $results/REAL_$db.res
-srun evaluate_calls $nodes genus $Sground $results/SMLTD_$db.res
-srun evaluate_calls $nodes genus $Mground $results/MARINE_$db.res
+  srun evaluate_calls $nodes genus $Rground $results/REAL_$db.res
+  srun evaluate_calls $nodes genus $Sground $results/SMLTD_$db.res
+  srun evaluate_calls $nodes genus $Mground $results/MARINE_$db.res
 
-echo "Evaluation: Species of $db"
+  echo "Evaluation: Species of $db"
 
-srun evaluate_calls $nodes species $Rground $results/REAL_$db.res
-srun evaluate_calls $nodes species $Sground $results/SMLTD_$db.res
-srun evaluate_calls $nodes species $Mground $results/MARINE_$db.res
+  srun evaluate_calls $nodes species $Rground $results/REAL_$db.res
+  srun evaluate_calls $nodes species $Sground $results/SMLTD_$db.res
+  srun evaluate_calls $nodes species $Mground $results/MARINE_$db.res
 
-echo "Number of genus per dataset"
+  echo "Number of genus per dataset"
 
-srun evaluate_calls $nodes genus $Rground $Rground
-srun evaluate_calls $nodes genus $Sground $Sground
-srun evaluate_calls $nodes genus $Mground $Mground
+  srun evaluate_calls $nodes genus $Rground $Rground
+  srun evaluate_calls $nodes genus $Sground $Sground
+  srun evaluate_calls $nodes genus $Mground $Mground
 
-echo "Number of species per dataset"
+  echo "Number of species per dataset"
 
-srun evaluate_calls $nodes species $Rground $Rground
-srun evaluate_calls $nodes species $Sground $Sground
-srun evaluate_calls $nodes species $Mground $Mground
+  srun evaluate_calls $nodes species $Rground $Rground
+  srun evaluate_calls $nodes species $Sground $Sground
+  srun evaluate_calls $nodes species $Mground $Mground
 
-echo "Number of genus per database ($db)"
-srun grep -c -P "\tG\t" $root/databases/$db/inspect.txt
+  echo "Number of genus per database ($db)"
+  srun grep -c -P "\tG\t" $root/databases/$db/inspect.txt
 
-echo "Number of species per database ($db)"
-srun grep -c -P "\tS\t" $root/databases/$db/inspect.txt
+  echo "Number of species per database ($db)"
+  srun grep -c -P "\tS\t" $root/databases/$db/inspect.txt
+}
+
+echo "### JOB STARTED ###"
+
+#run_kraken
+
+evaluate
 
 echo "### JOB TERMINATED ###"
