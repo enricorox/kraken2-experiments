@@ -119,9 +119,8 @@ bool isAncestor(const unordered_map<int, int> &parent_map, int a, int b) {
     if (parent_map.find(b) != parent_map.end()) {
       b = parent_map.at(b);
     } else {
-        not_in_tree++;
-
-        return false;
+      not_in_tree++;
+      return false;
     }
   }
   return false;
@@ -202,10 +201,9 @@ void ScoreCalls(const string &calls_file, const string &rank, const unordered_ma
   int fn = 0; //false negative
   int ok = 0;  // correct but above rank
   int no = 0;  // no defined true value at rank
-    set<int> tp_set; // true positive set
+  set<int> tp_set; // true positive set
 
-
-    unordered_map<int, int> class_count;
+  unordered_map<int, int> class_count;
   size_t n = truth_map.size();
   string code, name;
   int taxon;
@@ -239,7 +237,7 @@ void ScoreCalls(const string &calls_file, const string &rank, const unordered_ma
         if (isAncestor(parent_map, correct, taxon)) {
           UpdateMapElements(correct, class_count);
           tp++;
-            tp_set.insert(taxon);
+            tp_set.insert(correct);
 
         }
         else {
@@ -258,8 +256,8 @@ void ScoreCalls(const string &calls_file, const string &rank, const unordered_ma
   double f1 = sens * prec == 0 ? 0.0 : 2 * sens * prec / (sens + prec);
   double pearson = PearsonCorrelation(class_count, truth_count, n);
   //printf("Analysis at %s level:\n", rank.c_str());
-    printf("TruePositive\tFalsePositive\tFalseNegative\tCorrectAboveRank\tNoDefinedTrueValueAtRank\tTotalCount\tSensitivity\tPrecision\tF1\tPearson\tDistinctTPAtRank\tNotInTree\n");
-    printf("%d\t%d\t%d\t%d\t%d\t%d\t%.6f\t%.6f\t%.6f\t%.6f\t%zu\t%d\n", tp, fp, fn, ok, no, (tp+fp+fn+ok+no), sens, prec, f1, pearson, tp_set.size(), not_in_tree);
+  printf("TruePositive\tFalsePositive\tFalseNegative\tCorrectAboveRank\tNoDefinedTrueValueAtRank\tTotalCount\tSensitivity\tPrecision\tF1\tPearson\tDistinctTPAtRank\tNotInTree\n");
+  printf("%d\t%d\t%d\t%d\t%d\t%d\t%.6f\t%.6f\t%.6f\t%.6f\t%zu\t%d\n", tp, fp, fn, ok, no, (tp+fp+fn+ok+no), sens, prec, f1, pearson, tp_set.size(), not_in_tree);
 }
 
 int main(int argc, char **argv) {
