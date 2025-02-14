@@ -45,16 +45,29 @@ mkdir -p $results && cd $results
 cd $results
 
 run_kraken(){
+  echo
+  echo "### PHASE 1: RUNNING KRAKEN ###"
+  echo
+
   #REAL DATASET
+  echo
   echo "Running Kraken2 with $db on real dataset"
+  echo
+
   srun kraken2 --db $root/databases/$db --threads 16 --paired $R1 $R2 > $results/REAL_$db.out
 
   #SIMULATED DATASET
+  echo
   echo "Running Kraken2 with $db on simulated dataset"
+  echo
+
   srun kraken2 --db $root/databases/$db --threads 16 --paired $S1 $S2 > $results/SMLTD_$db.out
 
   #MARINE DATASET
+  echo
   echo "Running Kraken2 with $db on marine dataset"
+  echo
+
   srun kraken2 --db $root/databases/$db --threads 16 $M > $results/MARINE_$db.out
 
   # refining results
@@ -65,34 +78,52 @@ run_kraken(){
 
 evaluate(){
   ### EVALUATION ###
+  echo
+  echo "### PHASE 2: RUNNING EVALUATION ###"
+  echo
+
+  echo
   echo "Evaluation: Genus of $db"
+  echo
 
   srun evaluate_calls $nodes genus $Rground $results/REAL_$db.res
   srun evaluate_calls $nodes genus $Sground $results/SMLTD_$db.res
   srun evaluate_calls $nodes genus $Mground $results/MARINE_$db.res
 
+  echo
   echo "Evaluation: Species of $db"
+  echo
 
   srun evaluate_calls $nodes species $Rground $results/REAL_$db.res
   srun evaluate_calls $nodes species $Sground $results/SMLTD_$db.res
   srun evaluate_calls $nodes species $Mground $results/MARINE_$db.res
 
-  echo "Number of genus per dataset"
+  echo
+  echo "Number of genus per dataset (see TP)"
+  echo
 
   srun evaluate_calls $nodes genus $Rground $Rground
   srun evaluate_calls $nodes genus $Sground $Sground
   srun evaluate_calls $nodes genus $Mground $Mground
 
-  echo "Number of species per dataset"
+  echo
+  echo "Number of species per dataset (see TP)"
+  echo
 
   srun evaluate_calls $nodes species $Rground $Rground
   srun evaluate_calls $nodes species $Sground $Sground
   srun evaluate_calls $nodes species $Mground $Mground
 
+  echo
   echo "Number of genus per database ($db)"
+  echo
+
   srun grep -c -P "\tG\t" $root/databases/$db/inspect.txt
 
+  echo
   echo "Number of species per database ($db)"
+  echo
+
   srun grep -c -P "\tS\t" $root/databases/$db/inspect.txt
 }
 
