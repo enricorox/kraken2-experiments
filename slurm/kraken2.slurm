@@ -99,7 +99,7 @@ evaluate(){
   srun evaluate_calls $nodes species $Mground $results/MARINE_$db.res
 
   echo
-  echo "Number of genus per dataset (see TP)"
+  echo "Number of genus per dataset (see DistinctTPAtRank)"
   echo
 
   srun evaluate_calls $nodes genus $Rground $Rground
@@ -107,7 +107,7 @@ evaluate(){
   srun evaluate_calls $nodes genus $Mground $Mground
 
   echo
-  echo "Number of species per dataset (see TP)"
+  echo "Number of species per dataset (see DistinctTPAtRank)"
   echo
 
   srun evaluate_calls $nodes species $Rground $Rground
