@@ -1,8 +1,8 @@
 #!/bin/bash
 
 #SBATCH --job-name compile-eval
-#SBATCH --output compile-evaluate.log
-#SBATCH --error compile-evaluate.log
+#SBATCH --output logs/compile-evaluate.log
+#SBATCH --error logs/compile-evaluate.log
 #SBATCH --mail-user enrico.rossignolo@studenti.unipd.it
 #SBATCH --mail-type ALL
 #SBATCH --time 1-00:00:00

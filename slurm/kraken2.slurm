@@ -1,8 +1,8 @@
 #!/bin/bash
 
 #SBATCH --job-name kraken2
-#SBATCH --output kraken2.log
-#SBATCH --error kraken2.log
+#SBATCH --output logs/kraken2.log
+#SBATCH --error logs/kraken2.log
 #SBATCH --mail-user enrico.rossignolo@studenti.unipd.it
 #SBATCH --mail-type ALL
 #SBATCH --time 1-00:00:00
