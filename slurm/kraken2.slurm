@@ -13,40 +13,52 @@
 
 set -e
 
-root="/nfsd/bcb/bcbg/rossigno/metagenomics"
-ds_dir="/nfsd/bcb/bcbg/cavattoni/Algobio2023"
+db_urls=(
+"https://genome-idx.s3.amazonaws.com/kraken/k2_minusb_20241228.tar.gz"
+)
 
-PATH="/nfsd/bcb/bcbg/rossigno/tools:$PATH"
+define_vars(){
+  root="/nfsd/bcb/bcbg/rossigno/metagenomics"
+  ds_dir="/nfsd/bcb/bcbg/cavattoni/Algobio2023"
 
-db="Standard20240605" # change database here
-nodes="/nfsd/bcb/bcbg/rossigno/metagenomics/reads/nodes.dmp"
+  PATH="/nfsd/bcb/bcbg/rossigno/tools:$PATH"
 
-# real dataset and ground truth
-R1="$ds_dir/SRR1804065/SRR1804065_1.filtr.fq"
-R2="$ds_dir/SRR1804065/SRR1804065_2.filtr.fq"
-Rground="/nfsd/bcb/bcbg/cavattoni/Algobio2023/SRR1804065/SRR1804065_truth.tsv"
+  db_archive=$(basename $db_url)
 
-# Simulated dataset and ground truth
-S1="$ds_dir/Sim/all_250000_1.fq.gz"
-S2="$ds_dir/Sim/all_250000_2.fq.gz"
-Sground="/nfsd/bcb/bcbg/cavattoni/Algobio2023/Sim/truth_all_250000.tsv"
+  db=${db_archive%.tar.gz}
+  nodes="/nfsd/bcb/bcbg/rossigno/metagenomics/reads/nodes.dmp"
 
-# Marine dataset and ground truth
-M="$ds_dir/Marine/marmgCAMI2_long_read_sample_0_reads.fq"
-Mground="/nfsd/bcb/bcbg/cavattoni/Algobio2023/Marine/marmgCAMI2_long_read_sample_0_reads.fa.blastn.txt"
+  # real dataset and ground truth
+  R1="$ds_dir/SRR1804065/SRR1804065_1.filtr.fq"
+  R2="$ds_dir/SRR1804065/SRR1804065_2.filtr.fq"
+  Rground="/nfsd/bcb/bcbg/cavattoni/Algobio2023/SRR1804065/SRR1804065_truth.tsv"
 
-# Results directory
-results="$root/results/$db"
+  # Simulated dataset and ground truth
+  S1="$ds_dir/Sim/all_250000_1.fq.gz"
+  S2="$ds_dir/Sim/all_250000_2.fq.gz"
+  Sground="/nfsd/bcb/bcbg/cavattoni/Algobio2023/Sim/truth_all_250000.tsv"
 
-mkdir -p $results && cd $results
+  # Marine dataset and ground truth
+  M="$ds_dir/Marine/marmgCAMI2_long_read_sample_0_reads.fq"
+  Mground="/nfsd/bcb/bcbg/cavattoni/Algobio2023/Marine/marmgCAMI2_long_read_sample_0_reads.fa.blastn.txt"
 
-### KRAKEN2 MAIN ###
+  # Results directory
+  results="$root/results/$db"
+}
 
-cd $results
+download_database(){
+    echo
+    echo "### PHASE 0: DOWNLOAD $db ###"
+    echo
+
+    wget "$db_url" -o "$db_archive"
+    srun tar -xzvf "$db_archive"
+    rm "$db_archive"
+}
 
 run_kraken(){
   echo
-  echo "### PHASE 1: RUNNING KRAKEN ###"
+  echo "### PHASE 1: RUNNING KRAKEN2 for $db ###"
   echo
 
   #REAL DATASET
@@ -79,7 +91,7 @@ run_kraken(){
 evaluate(){
   ### EVALUATION ###
   echo
-  echo "### PHASE 2: RUNNING EVALUATION ###"
+  echo "### PHASE 2: RUNNING EVALUATION for $db ###"
   echo
 
   echo
@@ -102,20 +114,20 @@ evaluate(){
   echo "Number of genus per dataset (see DistinctTPAtRank)"
   echo
 
-  srun evaluate_calls $nodes genus $Rground $Rground
-  srun evaluate_calls $nodes genus $Sground $Sground
-  srun evaluate_calls $nodes genus $Mground $Mground
+  srun 'NR>1{print $11}' <<< "$(evaluate_calls $nodes genus $Rground $Rground)"
+  srun 'NR>1{print $11}' <<< "$(evaluate_calls $nodes genus $Sground $Sground)"
+  srun 'NR>1{print $11}' <<< "$(evaluate_calls $nodes genus $Mground $Mground)"
 
   echo
-  echo "Number of species per dataset (see DistinctTPAtRank)"
+  echo "Number of species per dataset:"
   echo
 
-  srun evaluate_calls $nodes species $Rground $Rground
-  srun evaluate_calls $nodes species $Sground $Sground
-  srun evaluate_calls $nodes species $Mground $Mground
+  srun 'NR>1{print $11}' <<< "$(evaluate_calls $nodes species $Rground $Rground)"
+  srun 'NR>1{print $11}' <<< "$(evaluate_calls $nodes species $Sground $Sground)"
+  srun 'NR>1{print $11}' <<< "$(evaluate_calls $nodes species $Mground $Mground)"
 
   echo
-  echo "Number of genus per database ($db)"
+  echo "Number of genus per database ($db):"
   echo
 
   srun grep -c -P "\tG\t" $root/databases/$db/inspect.txt
@@ -127,10 +139,35 @@ evaluate(){
   srun grep -c -P "\tS\t" $root/databases/$db/inspect.txt
 }
 
+generate_report(){
+  echo
+  echo "### PHASE 3: GENERATE KRAKEN2 REPORT for $db ###"
+  echo
+
+  srun kraken2 --report-zero-counts --db $root/databases/$db --threads 16 --paired $R1 $R2 --report $results/REPORT_REAL_$db
+
+  srun kraken2 --report-zero-counts --db $root/databases/$db --threads 16 --paired $S1 $S2 --report $results/REPORT_SIMULATED_$db
+
+  srun kraken2 --report-zero-counts --db $root/databases/$db --threads 16 $M --report $results/REPORT_MARINE_$db
+}
+
 echo "### JOB STARTED ###"
 
-#run_kraken
+for db_url in "${db_urls[@]}"; do
+  define_vars
 
-evaluate
+  cd $root/databases
+
+  download_database
+
+  mkdir -p "$results" && cd "$results"
+
+  run_kraken
+
+  evaluate
+
+  generate_report
+
+done
 
 echo "### JOB TERMINATED ###"
