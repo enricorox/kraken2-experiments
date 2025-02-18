@@ -51,8 +51,8 @@ download_database(){
     echo "### PHASE 0: DOWNLOAD $db ###"
     echo
 
-    wget "$db_url" -o "$db_archive"
-    srun tar -xzvf "$db_archive"
+    wget -nc "$db_url" -o "$db_archive"
+    srun tar -xvzf "$db_archive"
     rm "$db_archive"
 }
 
@@ -154,6 +154,8 @@ generate_report(){
 echo "### JOB STARTED ###"
 
 for db_url in "${db_urls[@]}"; do
+  echo "================================================================================"
+
   define_vars
 
   cd $root/databases
@@ -168,6 +170,7 @@ for db_url in "${db_urls[@]}"; do
 
   generate_report
 
+  echo "================================================================================"
 done
 
 echo "### JOB TERMINATED ###"
