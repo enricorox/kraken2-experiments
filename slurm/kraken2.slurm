@@ -63,6 +63,8 @@ download_database(){
     wget -nc "$db_url" -o "$db_archive"
     srun tar -xvf "$db_archive"
     rm "$db_archive"
+
+    echo "--- Done ---"
 }
 
 run_kraken(){
@@ -95,6 +97,8 @@ run_kraken(){
   srun cut -f 2-3 $results/REAL_$db.out > $results/REAL_$db.res
   srun cut -f 2-3 $results/SMLTD_$db.out > $results/SMLTD_$db.res
   srun cut -f 2-3 $results/MARINE_$db.out > $results/MARINE_$db.res
+
+  echo "--- Done ---"
 }
 
 evaluate(){
@@ -146,6 +150,8 @@ evaluate(){
   echo
 
   srun grep -c -P "\tS\t" $root/databases/$db/inspect.txt
+
+  echo "--- Done ---"
 }
 
 generate_report(){
@@ -158,6 +164,8 @@ generate_report(){
   srun kraken2 --report-zero-counts --db $root/databases/$db --threads 16 --paired $S1 $S2 --report $results/REPORT_SIMULATED_$db
 
   srun kraken2 --report-zero-counts --db $root/databases/$db --threads 16 $M --report $results/REPORT_MARINE_$db
+
+  echo "--- Done ---"
 }
 
 echo "### JOB STARTED ###"
