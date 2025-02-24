@@ -60,7 +60,7 @@ download_database(){
     echo "### PHASE 0: DOWNLOAD $db ###"
     echo
 
-    wget -nc "$db_url" -o "$db_archive"
+    wget -nc "$db_url"
     srun tar -xvf "$db_archive"
     rm "$db_archive"
 
