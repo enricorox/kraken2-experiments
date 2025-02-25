@@ -127,17 +127,17 @@ evaluate(){
   echo "Number of genus per dataset (see DistinctTPAtRank)"
   echo
 
-  srun 'NR>1{print $11}' <<< "$(evaluate_calls $nodes genus $Rground $Rground)"
-  srun 'NR>1{print $11}' <<< "$(evaluate_calls $nodes genus $Sground $Sground)"
-  srun 'NR>1{print $11}' <<< "$(evaluate_calls $nodes genus $Mground $Mground)"
+  srun awk 'NR>1{print $11}' <<< "$(evaluate_calls $nodes genus $Rground $Rground)"
+  srun awk 'NR>1{print $11}' <<< "$(evaluate_calls $nodes genus $Sground $Sground)"
+  srun awk 'NR>1{print $11}' <<< "$(evaluate_calls $nodes genus $Mground $Mground)"
 
   echo
   echo "Number of species per dataset:"
   echo
 
-  srun 'NR>1{print $11}' <<< "$(evaluate_calls $nodes species $Rground $Rground)"
-  srun 'NR>1{print $11}' <<< "$(evaluate_calls $nodes species $Sground $Sground)"
-  srun 'NR>1{print $11}' <<< "$(evaluate_calls $nodes species $Mground $Mground)"
+  srun awk 'NR>1{print $11}' <<< "$(evaluate_calls $nodes species $Rground $Rground)"
+  srun awk 'NR>1{print $11}' <<< "$(evaluate_calls $nodes species $Sground $Sground)"
+  srun awk 'NR>1{print $11}' <<< "$(evaluate_calls $nodes species $Mground $Mground)"
 
   echo
   echo "Number of genus per database ($db):"
