@@ -175,7 +175,7 @@ for db_url in "${db_urls[@]}"; do
 
   define_vars
 
-  cd $root/databases
+  mkdir $root/databases && cd $root/databases
 
   if [ ! -d "$db" ]; then
     download_database
