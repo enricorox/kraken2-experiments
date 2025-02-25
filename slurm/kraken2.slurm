@@ -61,8 +61,8 @@ download_database(){
     echo
 
     srun wget -q -nc "$db_url"
-    srun tar -xvf "$db_archive"
-    rm "$db_archive"
+    srun tar -xvf "$db_archive" --one-top-level
+    rm -f "$db_archive"
 
     echo "--- Done ---"
 }
