@@ -32,7 +32,7 @@ define_vars(){
 
   PATH="/nfsd/bcb/bcbg/rossigno/tools:$PATH"
 
-  db_archive=$(basename $db_url)
+  db_archive=$(basename "$db_url")
 
   db=${db_archive%.tar.gz}
   nodes="/nfsd/bcb/bcbg/rossigno/metagenomics/reads/nodes.dmp"
@@ -77,26 +77,26 @@ run_kraken(){
   echo "Running Kraken2 with $db on real dataset"
   echo
 
-  srun kraken2 --db $root/databases/$db --threads 16 --paired $R1 $R2 > $results/REAL_$db.out
+  srun kraken2 --db "$root/databases/$db" --threads 16 --paired $R1 $R2 > "$results/REAL_$db.out"
 
   #SIMULATED DATASET
   echo
   echo "Running Kraken2 with $db on simulated dataset"
   echo
 
-  srun kraken2 --db $root/databases/$db --threads 16 --paired $S1 $S2 > $results/SMLTD_$db.out
+  srun kraken2 --db "$root/databases/$db" --threads 16 --paired $S1 $S2 > "$results/SMLTD_$db.out"
 
   #MARINE DATASET
   echo
   echo "Running Kraken2 with $db on marine dataset"
   echo
 
-  srun kraken2 --db $root/databases/$db --threads 16 $M > $results/MARINE_$db.out
+  srun kraken2 --db "$root/databases/$db" --threads 16 $M > "$results/MARINE_$db.out"
 
   # refining results
-  srun cut -f 2-3 $results/REAL_$db.out > $results/REAL_$db.res
-  srun cut -f 2-3 $results/SMLTD_$db.out > $results/SMLTD_$db.res
-  srun cut -f 2-3 $results/MARINE_$db.out > $results/MARINE_$db.res
+  srun cut -f 2-3 "$results/REAL_$db.out" > "$results/REAL_$db.res"
+  srun cut -f 2-3 "$results/SMLTD_$db.out" > "$results/SMLTD_$db.res"
+  srun cut -f 2-3 "$results/MARINE_$db.out" > "$results/MARINE_$db.res"
 
   echo "### DONE ###"
 }
@@ -111,17 +111,17 @@ evaluate(){
   echo "Evaluation: Genus of $db"
   echo
 
-  srun evaluate_calls $nodes genus $Rground $results/REAL_$db.res
-  srun evaluate_calls $nodes genus $Sground $results/SMLTD_$db.res
-  srun evaluate_calls $nodes genus $Mground $results/MARINE_$db.res
+  srun evaluate_calls $nodes genus $Rground "$results/REAL_$db.res"
+  srun evaluate_calls $nodes genus $Sground "$results/SMLTD_$db.res"
+  srun evaluate_calls $nodes genus $Mground "$results/MARINE_$db.res"
 
   echo
   echo "Evaluation: Species of $db"
   echo
 
-  srun evaluate_calls $nodes species $Rground $results/REAL_$db.res
-  srun evaluate_calls $nodes species $Sground $results/SMLTD_$db.res
-  srun evaluate_calls $nodes species $Mground $results/MARINE_$db.res
+  srun evaluate_calls $nodes species $Rground "$results/REAL_$db.res"
+  srun evaluate_calls $nodes species $Sground "$results/SMLTD_$db.res"
+  srun evaluate_calls $nodes species $Mground "$results/MARINE_$db.res"
 
   echo
   echo "Number of genus per dataset (see DistinctTPAtRank)"
@@ -143,13 +143,13 @@ evaluate(){
   echo "Number of genus per database ($db):"
   echo
 
-  srun grep -c -P "\tG\t" $root/databases/$db/inspect.txt
+  srun grep -c -P "\tG\t" "$root/databases/$db/inspect.txt"
 
   echo
   echo "Number of species per database ($db)"
   echo
 
-  srun grep -c -P "\tS\t" $root/databases/$db/inspect.txt
+  srun grep -c -P "\tS\t" "$root/databases/$db/inspect.txt"
 
   echo "### DONE ###"
 }
@@ -159,11 +159,11 @@ generate_report(){
   echo "### PHASE 3: GENERATE KRAKEN2 REPORT for $db ###"
   echo
 
-  srun kraken2 --report-zero-counts --db $root/databases/$db --threads 16 --paired $R1 $R2 --report $results/REPORT_REAL_$db
+  srun kraken2 --report-zero-counts --db "$root/databases/$db" --threads 16 --paired $R1 $R2 --report "$results/REPORT_REAL_$db"
 
-  srun kraken2 --report-zero-counts --db $root/databases/$db --threads 16 --paired $S1 $S2 --report $results/REPORT_SIMULATED_$db
+  srun kraken2 --report-zero-counts --db "$root/databases/$db" --threads 16 --paired $S1 $S2 --report "$results/REPORT_SIMULATED_$db"
 
-  srun kraken2 --report-zero-counts --db $root/databases/$db --threads 16 $M --report $results/REPORT_MARINE_$db
+  srun kraken2 --report-zero-counts --db "$root/databases/$db" --threads 16 $M --report "$results/REPORT_MARINE_$db"
 
   echo "### DONE ###"
 }
