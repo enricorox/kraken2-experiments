@@ -177,7 +177,9 @@ for db_url in "${db_urls[@]}"; do
 
   cd $root/databases
 
-  download_database
+  if [ ! -d "$db" ]; then
+    download_database
+  fi
 
   mkdir -p "$results" && cd "$results"
 
