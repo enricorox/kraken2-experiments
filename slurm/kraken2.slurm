@@ -14,17 +14,23 @@
 set -e
 
 db_urls=(
-#"https://genome-idx.s3.amazonaws.com/kraken/k2_standard_20241228.tar.gz" # new standard
-#"https://genome-idx.s3.amazonaws.com/kraken/k2_standard_08gb_20241228.tar.gz"
-#"https://genome-idx.s3.amazonaws.com/kraken/k2_standard_16gb_20241228.tar.gz"
-#"https://genome-idx.s3.amazonaws.com/kraken/k2_minusb_20241228.tar.gz" # new minusB
-#"https://genome-idx.s3.amazonaws.com/kraken/k2_viral_20241228.tar.gz" # new viral
-#"https://genome-idx.s3.amazonaws.com/kraken/k2_standard_20240904.tar.gz" # old standards
-#"https://genome-idx.s3.amazonaws.com/kraken/k2_standard_20240605.tar.gz"
+"https://genome-idx.s3.amazonaws.com/kraken/k2_standard_20241228.tar.gz" # 0 new standard
+"https://genome-idx.s3.amazonaws.com/kraken/k2_standard_08gb_20241228.tar.gz"
+"https://genome-idx.s3.amazonaws.com/kraken/k2_standard_16gb_20241228.tar.gz"
+"https://genome-idx.s3.amazonaws.com/kraken/k2_minusb_20241228.tar.gz" # new minusB
+"https://genome-idx.s3.amazonaws.com/kraken/k2_viral_20241228.tar.gz" # new viral
+"https://genome-idx.s3.amazonaws.com/kraken/k2_standard_20240904.tar.gz" # old standards
+"https://genome-idx.s3.amazonaws.com/kraken/k2_standard_20240605.tar.gz"
 "https://genome-idx.s3.amazonaws.com/kraken/k2_standard_20240112.tar.gz"
 "https://genome-idx.s3.amazonaws.com/kraken/k2_standard_20231009.tar.gz"
 "https://genome-idx.s3.amazonaws.com/kraken/k2_standard_20230605.tar.gz"
+"https://genome-idx.s3.amazonaws.com/kraken/k2_pluspf_20241228.tar.gz" # 10 plusPF
+"https://genome-idx.s3.amazonaws.com/kraken/k2_pluspfp_20241228.tar.gz" # plusPFP
+"https://genome-idx.s3.amazonaws.com/kraken/k2_pluspfp_08gb_20241228.tar.gz"
+"https://genome-idx.s3.amazonaws.com/kraken/k2_pluspfp_16gb_20241228.tar.gz"
 )
+
+db_urls=("${db_urls[@]:10}")
 
 define_vars(){
   root="/nfsd/bcb/bcbg/rossigno/metagenomics"
