@@ -179,11 +179,17 @@ for db_url in "${db_urls[@]}"; do
 
   if [ ! -d "$db" ]; then
     download_database
+  else
+    echo "### PHASE 0: SKIPPED ###"
   fi
 
   mkdir -p "$results" && cd "$results"
 
-  run_kraken
+  if [ ! -f "$results/MARINE_$db.res" ]; then
+    run_kraken
+  else
+    echo "### PHASE 1: SKIPPED ###"
+  fi
 
   evaluate
 
