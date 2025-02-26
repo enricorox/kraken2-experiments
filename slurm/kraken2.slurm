@@ -5,7 +5,7 @@
 #SBATCH --error logs/kraken2.log
 #SBATCH --mail-user enrico.rossignolo@studenti.unipd.it
 #SBATCH --mail-type ALL
-#SBATCH --time 2-00:00:00
+#SBATCH --time 0-20:00:00
 #SBATCH --ntasks 1
 #SBATCH --cpus-per-task=16
 #SBATCH --partition allgroups
@@ -14,13 +14,13 @@
 set -e
 
 db_urls=(
-"https://genome-idx.s3.amazonaws.com/kraken/k2_standard_20241228.tar.gz" # new standard
-"https://genome-idx.s3.amazonaws.com/kraken/k2_standard_08gb_20241228.tar.gz"
-"https://genome-idx.s3.amazonaws.com/kraken/k2_standard_16gb_20241228.tar.gz"
-"https://genome-idx.s3.amazonaws.com/kraken/k2_minusb_20241228.tar.gz" # new minusB
-"https://genome-idx.s3.amazonaws.com/kraken/k2_viral_20241228.tar.gz" # new viral
-"https://genome-idx.s3.amazonaws.com/kraken/k2_standard_20240904.tar.gz" # old standards
-"https://genome-idx.s3.amazonaws.com/kraken/k2_standard_20240605.tar.gz"
+#"https://genome-idx.s3.amazonaws.com/kraken/k2_standard_20241228.tar.gz" # new standard
+#"https://genome-idx.s3.amazonaws.com/kraken/k2_standard_08gb_20241228.tar.gz"
+#"https://genome-idx.s3.amazonaws.com/kraken/k2_standard_16gb_20241228.tar.gz"
+#"https://genome-idx.s3.amazonaws.com/kraken/k2_minusb_20241228.tar.gz" # new minusB
+#"https://genome-idx.s3.amazonaws.com/kraken/k2_viral_20241228.tar.gz" # new viral
+#"https://genome-idx.s3.amazonaws.com/kraken/k2_standard_20240904.tar.gz" # old standards
+#"https://genome-idx.s3.amazonaws.com/kraken/k2_standard_20240605.tar.gz"
 "https://genome-idx.s3.amazonaws.com/kraken/k2_standard_20240112.tar.gz"
 "https://genome-idx.s3.amazonaws.com/kraken/k2_standard_20231009.tar.gz"
 "https://genome-idx.s3.amazonaws.com/kraken/k2_standard_20230605.tar.gz"
