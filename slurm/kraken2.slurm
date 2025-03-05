@@ -28,9 +28,10 @@ db_urls=(
 "https://genome-idx.s3.amazonaws.com/kraken/k2_pluspfp_20241228.tar.gz" # plusPFP
 "https://genome-idx.s3.amazonaws.com/kraken/k2_pluspfp_08gb_20241228.tar.gz"
 "https://genome-idx.s3.amazonaws.com/kraken/k2_pluspfp_16gb_20241228.tar.gz"
+"https://genome-idx.s3.amazonaws.com/kraken/k2_standard_20201202.tar.gz" # 14
 )
 
-db_urls=("${db_urls[@]:11}")
+db_urls=("${db_urls[@]:14}")
 
 define_vars(){
   root="/nfsd/bcb/bcbg/rossigno/metagenomics"
