@@ -131,7 +131,7 @@ evaluate(){
   srun evaluate_calls $nodes species $Mground "$results/MARINE_$db.res"
 
   echo
-  echo "Number of genus per dataset (see DistinctTPAtRank)"
+  echo "Number of genus per dataset"
   echo
 
   srun awk 'NR>1{print $11}' <<< "$(evaluate_calls $nodes genus $Rground $Rground)"
