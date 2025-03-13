@@ -13,7 +13,7 @@
 
 set -e
 set -x
-
+shopt -s nullglob
 
 define_vars(){
   root="/nfsd/bcb/bcbg/rossigno/metagenomics"
@@ -108,6 +108,8 @@ evaluate_marine(){
 }
 
 echo "### JOB STARTED ###"
+
+define_vars
 
 for res in "$results"/REAL*.res; do
   echo "================================================================================"
