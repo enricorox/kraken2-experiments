@@ -12,7 +12,7 @@
 #SBATCH --mem 200G
 
 set -e
-
+set -x
 
 
 define_vars(){
@@ -47,17 +47,17 @@ define_vars(){
 evaluate_real(){
   ### EVALUATION ###
   echo
-  echo "### PHASE 2: RUNNING EVALUATION for $db ###"
+  echo "### PHASE 2: RUNNING EVALUATION ###"
   echo
 
   echo
-  echo "Evaluation: Genus of $db"
+  echo "Evaluation: Genus"
   echo
 
   srun evaluate_calls $nodes genus $Rground "$res"
 
   echo
-  echo "Evaluation: Species of $db"
+  echo "Evaluation: Species"
   echo
 
   srun evaluate_calls $nodes species $Rground "$res"
@@ -68,17 +68,17 @@ evaluate_real(){
 evaluate_simulated(){
   ### EVALUATION ###
   echo
-  echo "### PHASE 2: RUNNING EVALUATION for $db ###"
+  echo "### PHASE 2: RUNNING EVALUATION ###"
   echo
 
   echo
-  echo "Evaluation: Genus of $db"
+  echo "Evaluation: Genus"
   echo
 
   srun evaluate_calls $nodes genus $Sground "$res"
 
   echo
-  echo "Evaluation: Species of $db"
+  echo "Evaluation: Species"
   echo
 
   srun evaluate_calls $nodes species $Sground "$res"
@@ -89,17 +89,17 @@ evaluate_simulated(){
 evaluate_marine(){
   ### EVALUATION ###
   echo
-  echo "### PHASE 2: RUNNING EVALUATION for $db ###"
+  echo "### PHASE 2: RUNNING EVALUATION"
   echo
 
   echo
-  echo "Evaluation: Genus of $db"
+  echo "Evaluation: Genus"
   echo
 
   srun evaluate_calls $nodes genus $Mground "$res"
 
   echo
-  echo "Evaluation: Species of $db"
+  echo "Evaluation: Species"
   echo
 
   srun evaluate_calls $nodes species $Mground "$res"
@@ -112,6 +112,8 @@ echo "### JOB STARTED ###"
 for res in "$results"/REAL*.res; do
   echo "================================================================================"
 
+  echo "Evaluation: $res"
+
   evaluate_real
 
   #generate_report
@@ -122,6 +124,8 @@ done
 for res in "$results"/SMLTD*.res; do
   echo "================================================================================"
 
+  echo "Evaluation: $res"
+
   evaluate_simulated
 
   #generate_report
@@ -131,6 +135,8 @@ done
 
 for res in "$results"/MARINE*.res; do
   echo "================================================================================"
+
+  echo "Evaluation: $res"
 
   evaluate_marine
 
